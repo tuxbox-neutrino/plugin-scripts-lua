@@ -950,12 +950,14 @@ function getStream(_id)
 								if j_mediaStreamArray[i2]._server ~= nil then
 									_server = j_mediaStreamArray[i2]._server
 								end
-								if j_mediaStreamArray[i2]._stream == nil then
+								local _stream = j_mediaStreamArray[i2]._stream
+								if _stream == nil then
 									print("#####[ard_mediathek] No stream available, exit.")
 									streamBreak = true
 									break
 								end
-								streamUrl = _server .. j_mediaStreamArray[i2]._stream;
+								if _stream[1] ~= nil then _stream = _stream[1] end
+								streamUrl = _server .. _stream;
 								streamQuality = j_mediaStreamArray[i2]._quality
 								if tostring(streamQuality) == "auto" then
 									if n:strSub(streamUrl, #streamUrl-4) == ".f4m" then
@@ -1154,6 +1156,21 @@ function conv_str(_string)
 	_string = string.gsub(_string,"\\n","");
 ]]
 	return _string
+end
+
+function tprint(tbl, indent)
+	if not indent then indent = 0 end
+	for k, v in pairs(tbl) do
+		formatting = string.rep(" ", indent) .. k .. ": "
+		if type(v) == "table" then
+			print(formatting)
+			tprint(v, indent+1)
+		elseif type(v) == 'boolean' then
+			print(formatting .. tostring(v))	
+		else
+			print(formatting .. v)
+		end
+	end
 end
 
 -- #######################################################################################
