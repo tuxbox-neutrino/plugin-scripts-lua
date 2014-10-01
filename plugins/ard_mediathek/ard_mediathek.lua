@@ -1220,9 +1220,10 @@ function setOptions()
 	m_conf:addItem{type = "separatorline"}
 	opt = { "DE" ,"EN" }
 	m_conf:addItem{type="chooser", action="set_string", options={opt[1], opt[2]}, id="language", value=conf["language"], icon=1, directkey=RC["1"], name=langStr_language}
-	opt = { "auto", "min" ,"max" }
---	opt = { "min" ,"max" }
-	m_conf:addItem{type="chooser", action="set_string", options={opt[1], opt[2]}, id="quality", value=conf["quality"], icon=2, directkey=RC["2"], name=langStr_quality}
+--	opt = { "max" ,"min" }
+--	m_conf:addItem{type="chooser", action="set_string", options={opt[1], opt[2]}, id="quality", value=conf["quality"], icon=2, directkey=RC["2"], name=langStr_quality}
+	opt = { "auto", "max" ,"min" }
+	m_conf:addItem{type="chooser", action="set_string", options={opt[1], opt[2], opt[3]}, id="quality", value=conf["quality"], icon=2, directkey=RC["2"], name=langStr_quality}
 
 	m_conf:exec()
 --	m_conf:hide()
