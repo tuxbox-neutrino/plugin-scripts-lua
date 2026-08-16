@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<webtvs name="sportschau Livestreams">
+	<webtv title="sportschau" url="https://www.sportschau.de/streams" script="sportschau.lua" />
+</webtvs>
