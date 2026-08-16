@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<webtvs name="zdfsport Livestreams">
+	<webtv title="zdfsport" url="https://www.zdf.de/sportstudio-live-livestream-100" script="zdfsport.lua" />
+</webtvs>
