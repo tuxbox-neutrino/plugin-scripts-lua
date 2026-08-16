@@ -91,6 +91,7 @@ function getVideoUrl(m3u8_url)
 		if hosttmp then
 			host = hosttmp .."/"
 		end
+
 		local revision = 0
 		local maxRes = getMaxRes()
 		if APIVERSION ~= nil and (APIVERSION.MAJOR > 1 or ( APIVERSION.MAJOR == 1 and APIVERSION.MINOR > 82 )) then
@@ -144,7 +145,13 @@ function getVideoUrl(m3u8_url)
 		local allres = {}
 		local j = 1
 		local minRes = 0
-		for band, res1, res2, url in data:gmatch('BANDWIDTH=(%d+).-RESOLUTION=(%d+)x(%d+).-\n(.-)\n') do
+
+		local mask = 'BANDWIDTH=(%d+).-RESOLUTION=(%d+)x(%d+).-\n(.-)\n'
+		if data:find("#EXT%-X%-STREAM%-INF:") then
+			data = data:gsub("#EXT%-X%-I%-FRAME%-STREAM%-INF:[^\n]*\n?", "")
+		end
+
+		for band, res1, res2, url in data:gmatch(mask) do
 			local nr = tonumber(res1)
 			if nr <= maxRes then
 				minRes = nr
@@ -155,12 +162,16 @@ function getVideoUrl(m3u8_url)
 		if minRes == 0 and j>1 then maxRes = math.min(unpack(allres)) end
 		allres = {}
 		local c = 0
-		for band, res1, res2, url in data:gmatch('BANDWIDTH=(%d+).-RESOLUTION=(%d+)x(%d+).-\n(.-)\n') do
+		for band, res1, res2, url in data:gmatch(mask) do
 			if url and res1 and url:sub(1,3) ~= '../' then
 				local nr = tonumber(res1)
 					res=nr
 					if host and url:sub(1,4) ~= "http" then
 						if host:sub(-1) == '/' and url:sub(1,1) == '/' then
+							local _, slash_count = host:gsub("/", "")
+							if slash_count ~= 3 or host:sub(-1) ~= "/" then
+								host = host:match("^([hH][tT][tT][pP][sS]?://[^/]+/)")
+							end
 							url = host:sub(1,-2) .. url
 						else
 							url = host .. url
@@ -212,6 +223,10 @@ function getVideoUrl(m3u8_url)
 						res=nr
 						if host and url:sub(1,4) ~= "http" then
 							if host:sub(-1) == '/' and url:sub(1,1) == '/' then
+								local _, slash_count = host:gsub("/", "")
+								if slash_count ~= 3 or host:sub(-1) ~= "/" then
+									host = host:match("^([hH][tT][tT][pP][sS]?://[^/]+/)")
+								end
 								url = host:sub(1,-2) .. url
 							else
 								url = host .. url
